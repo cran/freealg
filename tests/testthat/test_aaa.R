@@ -8,17 +8,47 @@
 test_that("Test suite aaa.R",{
 
 checker1 <- function(x){
-    expect_true(x==x, info=x)
+
+    options("usecaret" = FALSE)
+    print(x)
+    options("usecaret" = TRUE)
+    print(x)
+
+    expect_error(!x)
+
+    expect_error(x < x)
+    expect_error(x > x)
+    expect_error(x <=x)
+    expect_error(x >=x)
+
+    expect_error(x+seq_len(4))
+  
+    expect_error(x != 1)
+    expect_error(x == 1)
+    expect_error(x/x)
+    expect_error(x^x)
+    expect_error(x^(-1))
+  
+
+    expect_true(x == x, info=x)
+    expect_true(x != x+1, info=x)
+    expect_true(x != x-1, info=x)
 
     expect_true(x == x + constant(0), info=x)
+    expect_true(x == x + 0, info=x)
     expect_true(x == x + 0, info=x)
     expect_true(x == (x + 4) -4, info=x)
     expect_true(x == -(-x), info=x)
     expect_true(x == +(+x), info=x)
 
+    expect_true(x + 1 ==  1 + x, info=x)
+    expect_true(x - 1 == -1 + x, info=x)
+    expect_true(1 - x == -x + 1, info=x)
+
     expect_true(x+x-x == x, info=x)
 
     expect_true(is.zero(x-x), info=x)
+    expect_true(is.zero(x*0), info=x)
 
     expect_true(0*x == constant(0), info=x)
     expect_true(1*x == x, info=x)
@@ -28,6 +58,9 @@ checker1 <- function(x){
     expect_true(5*x == x+x+x+x+x, info=x)
     expect_true(6*x == x+x+x+x+x+x, info=x)
 
+    expect_true(x/2 + x/2 == x, info=x)
+
+  
     expect_true(x^0 == constant(1), info=x)
     expect_true(x^1 == x, info=x)
     expect_true(x^2 == x*x, info=x)
@@ -44,6 +77,14 @@ checker1 <- function(x){
     expect_true(constant(y) == 0, info=x)
 
   
+    expect_silent(x <- as.freealg(x))
+
+    coeffs(x) <- 3
+    expect_true(all(coeffs(x)==3))
+
+
+
+
 
   return(TRUE)
 }  # checker1() closes

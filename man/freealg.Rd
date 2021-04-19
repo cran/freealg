@@ -9,7 +9,7 @@
 \alias{vector_to_free}
 \alias{string_to_freealg}
 \title{The free algebra}
-\description{Create, test for, an coerce to, \code{freealg} objects}
+\description{Create, test for, and coerce to, \code{freealg} objects}
 \usage{
 freealg(words, coeffs)
 is_ok_free(words,coeffs)
@@ -21,10 +21,10 @@ string_to_freealg(string)
 vector_to_free(v,coeffs)
 }
 \arguments{
-  \item{words}{Terms of the algebra object, eg \code{[1,2,-1,3,2]}
-    corresponds to \code{abACB} (uppercase, or negative number, means
-    inverse)} 
-  \item{coeffs}{Numeric vector corresponding to the coefficients to each
+  \item{words}{Terms of the algebra object, eg \code{c(1,2,-1,3,2)}
+    corresponds to \code{abACB} because \eqn{a=1}, \eqn{b=2} etc;
+    uppercase, or negative number, means inverse}
+  \item{coeffs}{Numeric vector corresponding to the coefficients of each
     element of the \code{word} list}
   \item{string}{Character string}
   \item{ch}{Character vector}
@@ -64,6 +64,11 @@ functions assume that upper-case letters are the multiplicative inverses
 of the lower-case equivalents; so for example \code{as.freealg("aA")}
 and \code{as.freealg(aBcCbA)} evaluate to one.  This can be confusing
 with the default print method.
+
+Note carefully that even though individual symbols have multiplicative
+inverses, a general element of the free algebra will not have a
+multiplicative inverse.  For example, \code{1+x} does not have an
+inverse.  The free algebra is not a division algebra, in general.
 
 }
 \author{Robin K. S. Hankin}

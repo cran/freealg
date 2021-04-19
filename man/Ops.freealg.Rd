@@ -14,6 +14,10 @@
 \alias{lowlevel_free_prod}
 \alias{lowlevel_free_sum}
 \alias{lowlevel_free_power}
+\alias{lowlevel_deriv}
+\alias{lowlevel_diff}
+\alias{lowlevel_diffn}
+\alias{lowlevel_subs}
 \title{Arithmetic Ops methods for the the free algebra}
 \description{
   Arithmetic operators for manipulation of freealg objects
@@ -30,10 +34,14 @@ lowlevel_simplify(words,coeffs)
 lowlevel_free_prod(words1,coeffs1,words2,coeffs2)
 lowlevel_free_sum(words1,coeffs1,words2,coeffs2)
 lowlevel_free_power(words,coeffs,n)
+lowlevel_diffn(words,coeffs,r)
+lowlevel_subs(words1, coeffs1, words2, coeffs2, r)
 }
 \arguments{
   \item{S,e1,e2}{Objects of class \code{freealg}}
-  \item{n}{An integer, possibly non-positive}
+  \item{n}{Integer, possibly non-positive}
+  \item{r}{Integer vector indicating variables to differentiate with
+  respect to}
   \item{x}{Scalar value}
   \item{words,words1,words2}{A list of words, that is, a list of integer vectors
     representing the variables in each term}

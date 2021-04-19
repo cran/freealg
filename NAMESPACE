@@ -1,8 +1,15 @@
 useDynLib(freealg, .registration=TRUE)
 exportPattern("^[[:alpha:]]+")
 
+import("methods")
+import("mathjaxr")
+
 importFrom("stats", "rgeom")
 importFrom(Rcpp, evalCpp)
+
+importFrom(partitions, multiset)
+
+importFrom("utils", "capture.output")
 
 S3method(constant, freealg)
 S3method(constant, numeric)
@@ -10,4 +17,4 @@ S3method("constant<-", freealg)
 S3method("coeffs<-", freealg)
 S3method("Ops",freealg)
 S3method("print",freealg)
-
+S3method("deriv",freealg)

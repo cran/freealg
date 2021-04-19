@@ -115,8 +115,8 @@
       pm <- " + " # pm = plus or minus
     } else {
       pm <- " - "
-      co <- abs(co)
     }
+    co <- capture.output(cat(abs(co)))
     jj <- words(x)[i][[1]]
     if(length(jj)>0){mulsym <- "*"} else {mulsym <- ""}
     if(any(jj<0)){jj[jj<0] <- n-jj[jj<0]}
@@ -126,7 +126,7 @@
     out <- paste(out, pm, co, mulsym, jj, sep="")
   }
   if(is.zero(x)){out <- "0"}
-  cat(out)
+  cat(paste(strwrap(out, getOption("width")), collapse="\n"))
   cat("\n")
   return(x)
 }
@@ -166,3 +166,47 @@
   string <- gsub("\\+"," +",string) # 'A+B" -> "A +B"
   string <- gsub("\\-", " -",string) # "A-B" -> "A -B"
   char_to_freealg(strsplit(string," ")[[1]]) }
+
+setGeneric("deriv")
+`deriv.freealg` <- function(expr, r, ...){
+    jj <- lowlevel_diffn(expr[[1]],expr[[2]],r)
+    return(freealg(jj[[1]],jj[[2]]))
+}
+
+
+`horner` <- function(P, v){
+  P <- as.freealg(P)
+  Reduce(v, right=TRUE, f=function(a,b){b*P + a})
+}
+
+`subsu` <- function(S1,S2,r){
+    S1 <- as.freealg(S1)
+    S2 <- as.freealg(S2)
+    if(is.character(r) & (nchar(r)==1)){r <- which(letters==r)}
+    out <- lowlevel_subs(S1[[1]],S1[[2]],S2[[1]],S2[[2]],as.integer(round(r[1])))
+    freealg(out[[1]],out[[2]])
+}
+
+`subs` <- function(S, ...){
+    sb  <- list(...)
+    v <- names(sb)
+    out <- S
+    for (i in seq_along(sb)) {
+      out <- subsu(out, sb[[i]],v[i])
+    }
+    return(out)
+}
+
+`linear` <- function(x,power=1){
+    a <- seq_along(x)
+    jj <- cbind(a,power)
+    freealg(sapply(a,function(i){rep(jj[i,1],jj[i,2])},simplify=FALSE),x)
+}
+
+`pepper` <- function(v){
+    if(is.character(v)){
+        v <- match(unlist(strsplit(v,"")),letters)
+    }
+    mv <- partitions::multiset(v)
+    freealg(split(mv,col(mv)),rep(1,ncol(mv)))
+}
