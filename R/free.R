@@ -108,6 +108,9 @@
 
 `print.freealg` <- function(x,...){
   cat("free algebra element algebraically equal to\n")
+  SHRT_MAX <- 32767
+  SHRT_MAXo2 <- round(SHRT_MAX/2)
+  
 
   if(isTRUE(getOption("usecaret"))){
       symbols <- c(letters,paste(letters,"^-1",sep=""))
@@ -130,10 +133,19 @@
     jj <- w[i][[1]]
     if(length(jj)>0){mulsym <- "*"} else {mulsym <- ""}
     if(any(jj<0)){jj[jj<0] <- n-jj[jj<0]}
-    jj <- symbols[jj]
-    jj <- paste(jj,collapse="")
+    ss <- symbols[jj]
+    wanted <- jj>SHRT_MAX
+    if(any(wanted)){# (da)
+        ss[wanted] <- paste("(d",symbols[jj[wanted]-SHRT_MAX],")",sep="")
+    }
 
-    out <- paste(out, pm, co, mulsym, jj, sep="")
+    wanted <- (jj>SHRT_MAXo2) & (jj<SHRT_MAX) # (dA)
+    if(any(wanted)){
+        ss[wanted] <- paste("(d",symbols[26-jj[wanted]+SHRT_MAX],")",sep="")
+    }
+
+    ss <- paste(ss,collapse="")
+    out <- paste(out, pm, co, mulsym, ss, sep="")
   }
   if(is.zero(x)){out <- "0"}
   cat(paste(strwrap(out, getOption("width")), collapse="\n"))
@@ -179,10 +191,19 @@
 
 setGeneric("deriv")
 `deriv.freealg` <- function(expr, r, ...){
-    jj <- lowlevel_diffn(expr[[1]],expr[[2]],r)
+    if(is.character(r)){
+        rn <- numeric(length(r))
+        if(length(r)==1){r <- strsplit(r,"")[[1]]}
+        rn <- sapply(r,function(x){which(x==c(letters,LETTERS))}) # a=1,b=2...
+        wanted <- rn>26
+        rn[wanted] <- 26-rn[wanted]  # A=-1,B=-2,...
+    } else {
+        rn <- r
+    }
+    
+    jj <- lowlevel_diffn(expr[[1]],expr[[2]],rn)
     return(freealg(jj[[1]],jj[[2]]))
 }
-
 
 `horner` <- function(P, v){
   P <- as.freealg(P)
