@@ -241,3 +241,24 @@ setGeneric("deriv")
     mv <- partitions::multiset(v)
     freealg(split(mv,col(mv)),rep(1,ncol(mv)))
 }
+
+`grade` <- function(x,n){
+    if(missing(n)){stop("argument 'n' missing ... maybe you meant grades()?")}
+    coeffs(x)[!(grades(x) %in% n)] <- 0
+    return(x)
+}
+
+`grades` <- function(x){
+    disord(unlist(lapply(words(x),length)),hashcal(x))
+}
+
+`grade<-` <- function(x, n, value){
+    if(is.freealg(value)){
+        stopifnot(all(grades(value) %in% n))
+        grade(x,n) <- 0
+        return(x+value)
+    } else {
+        coeffs(x)[grades(x) %in% n] <- value
+        return(x)
+    }
+}
