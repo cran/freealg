@@ -71,12 +71,12 @@
   if(any(wanted)){
     co <- coeffs(x)
     co[wanted] <- value
-    w <- words(x)
+    w <- elements(words(x))
     } else {
       co <- c(elements(coeffs(x)),value)
       w <- c(elements(words(x)),list(numeric(0)))
     }
-  freealg(w,co)
+  freealg(elements(w),elements(co))
 }
 
 `is.freealg` <- function(x){inherits(x,"freealg")}
@@ -261,4 +261,14 @@ setGeneric("deriv")
         coeffs(x)[grades(x) %in% n] <- value
         return(x)
     }
+}
+
+`nterms` <- function(x){length(coeffs(x))}
+
+`inv` <- function(S){
+  if(nterms(S)==1){
+    return(freealg(list(rev(-words(S)[[1]])),1/coeffs(S)))
+  } else {
+    stop("only freealg objects with exactly one term have a multiplicative inverse")
+  }
 }

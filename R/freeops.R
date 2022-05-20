@@ -53,20 +53,12 @@
       if(lclass && !rclass){
         return(free_power_scalar(e1,e2)) # S^n
       } else {
-        stop("Generic '^' not implemented in this case")
+        stop("Generic '^' not implemented in this case: x^2=x*x")
       }
     } else if (.Generic == "==") {
-      if(lclass && rclass){
         return(free_eq_free(e1,e2))
-      } else {
-        stop("Generic '==' only compares two freealg objects with one another")
-      }          
     } else if (.Generic == "!=") {
-      if(lclass && rclass){
         return(!free_eq_free(e1,e2))
-      } else {
-        stop("Generic '!=' only compares two free objects with one another")
-      }
     } else if (.Generic == "/") {
       if(lclass && !rclass){
         return(free_times_scalar(e1,1/e2))
@@ -83,6 +75,8 @@
         return(freealg(words(S), -coeffs(S)))
     }
 }
+
+# inv() defined in free.R; it is not really an operation
 
 `free_times_free` <- function(S1,S2){
   if(is.zero(S1) || is.zero(S2)){

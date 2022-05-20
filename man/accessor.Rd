@@ -1,4 +1,5 @@
 \name{accessor}
+\alias{accessor}
 \alias{accessors}
 \alias{words}
 \alias{coeffs}
@@ -31,7 +32,11 @@ at \code{accessor.Rd}.
 \seealso{\code{\link{constant}}}
 \examples{
 a <- rfalg()
-
+a
 coeffs(a)
-coeffs(a) <- 7
+words(a)  # Note hash is identical to that of coeffs(a)
+
+coeffs(a) <- 7   # replacement methods work 
+a
+coeffs(a)  # 
 }
