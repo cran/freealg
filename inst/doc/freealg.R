@@ -6,7 +6,8 @@ set.seed(1)
 
 ## ----label=defineAandB--------------------------------------------------------
 (A <- as.freealg("xxyx + 2zy"))
-(B <- as.freealg("3z + 4yyyy"))
+(B <- as.freealg("-2zy + 3yyyy"))
+A+B
 A*B
 B*A
 
