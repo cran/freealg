@@ -75,6 +75,7 @@ checker1 <- function(x){
     constant(y) <- 0
     expect_true(constant(y) == 0, info=x)
 
+
   
     expect_silent(x <- as.freealg(x))
 
@@ -82,7 +83,11 @@ checker1 <- function(x){
     expect_true(all(coeffs(x)==3))
 
 
+    expect_true(abelianize(abelianize(x)) == abelianize(x))
+    expect_true(abelianize(abelianize(x)) == abelianize(x))
 
+    expect_true(max(grades(abelianize(x))) <= max(grades(x)))
+    expect_true(grades(x*0)==0)
 
 
   return(TRUE)
@@ -99,6 +104,7 @@ checker2 <- function(x,y){
   expect_true(x*(-y) == -(x*y), info=list(x,y))
 
   ##  expect_true(x*y == y*x)  
+
   return(TRUE)
 }
 

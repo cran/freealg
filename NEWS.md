@@ -11,3 +11,13 @@
 # 1.0-8
 
 - bugfixes
+
+# 1.0-9
+
+- added abelianize() following freegroup::abelianize()
+
+# 1.1-0
+
+- drop() functionality
+- bugfixes: is.constant()
+- consistent citations in the vignette

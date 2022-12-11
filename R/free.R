@@ -44,11 +44,22 @@
   freealg(list(numeric(0)),x)
   }
 
-`is.zero` <- function(x){  length(coeffs(x))==0 }
+`is.zero` <- function(x){
+  if(!is.freealg(x)){ return(x==0)}
+  return(length(coeffs(x))==0)
+}
 
 `is.constant` <- function(x){
-  jj <- words(x)
-  (length(jj)==1) & identical(jj[[1]],integer(0))
+  if(!is.freealg(x)){
+    return(is.numeric(x) & (length(x)==1))
+  } else {
+    if(is.zero(x)){
+      return(TRUE)
+    } else {
+      jj <- words(x)
+      return((length(jj)==1) & identical(jj[[1]],integer(0)))
+    }
+  }
 }
 
 "constant" <- function(x){UseMethod("constant")}
@@ -250,7 +261,12 @@ setGeneric("deriv")
 }
 
 `grades` <- function(x){
-    disord(unlist(lapply(words(x),length)),hashcal(x))
+  if(is.zero(x)){
+    out <- 0
+  } else {
+    out <- disord(unlist(lapply(words(x),length)),hashcal(x))
+  }
+  return(out)
 }
 
 `grade<-` <- function(x, n, value){
@@ -273,3 +289,20 @@ setGeneric("deriv")
     stop("only freealg objects with exactly one term have a multiplicative inverse")
   }
 }
+
+`abelianize` <- function(x){
+  freealg(lapply(words(x),function(x){x[order(abs(x))]}),elements(coeffs(x)))
+}
+
+setGeneric("drop")
+setMethod("drop","freealg", function(x){
+    if(is.zero(x)){
+        return(0)
+    } else if(is.constant(x)){
+        return(constant(x))
+    } else {
+        return(x)
+    }
+})
+
+

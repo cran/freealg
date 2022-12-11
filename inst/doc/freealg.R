@@ -12,6 +12,9 @@ A*B
 B*A
 
 ## ----useuppercase-------------------------------------------------------------
+A*as.freealg("X") # X = x^{-1}
+
+## ---- uppercaseC--------------------------------------------------------------
 (C <- as.freealg("3 + 5X - 2Xyx"))
 A*C
 C*A
@@ -22,7 +25,9 @@ A*(B+C) == A*B + A*C
 A*(B*C) == (A*B)*C
 
 ## ----label=usecommutator------------------------------------------------------
-.[as.freealg("x"),as.freealg("y")]
+a <- as.freealg("a")
+b <- as.freealg("b")
+.[a,b] # returns ab-ba
 
 ## ----label=verifyjacobi-------------------------------------------------------
 x <- rfalg()
