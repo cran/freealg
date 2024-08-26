@@ -32,13 +32,15 @@ vector_to_free(v,coeffs)
   \item{x}{Object possibly of class \code{freealg}}
   \item{...}{Further arguments, passed to the methods}
 }
-\details{\loadmathjax
+\details{
 
 Function \code{freealg()} is the formal creation mechanism for
 \code{freealg} objects.  However, it is not very user-friendly; it is
-better to use \code{as.freealg()} in day-to-day use.
+better to use \code{as.freealg()} in day-to-day use (although it does
+use heuristics for the coefficients if not supplied).
 
-Function \code{is_ok_freealg()} checks for consistency of its arguments.
+Low-level helper function \code{is_ok_freealg()} checks for consistency
+of its arguments.
 
 A \code{freealg} object is a two-element list.  The first element is a
 list of integer vectors representing the indices and the second is a
@@ -65,12 +67,6 @@ of the lower-case equivalents; so for example \code{as.freealg("aA")}
 and \code{as.freealg(aBcCbA)} evaluate to one.  This can be confusing
 with the default print method.
 
-Even though individual symbols have multiplicative inverses, a general
-element of the free algebra will not have a multiplicative inverse.  For
-example, \code{1+x} does not have an inverse.  The free algebra is not a
-division algebra, in general.
-
-
 }
 
 \author{Robin K. S. Hankin}
@@ -82,12 +78,13 @@ division algebra, in general.
   only has 26 symbols for letters a-z (and A-Z for the inverses), but
   the objects themselves do not care about the print method.  Note also
   that the experimental calculus facility (as per \code{deriv()})
-  reserves numbers in the range \code{SHRT_MAX}\mjeqn{{}\pm r}{+/-r} for
+  reserves numbers in the range \code{SHRT_MAX}\eqn{{}\pm r}{+/-r} for
   infinitesimals, where \code{r} is the integer for a symbol.  This
   system might change in the future.  }
 \examples{
 
 freealg(list(1:2, 2:1,numeric(0),1:6),1:4)
+freealg(list(1:2, 2:1,numeric(0),1:6))   # heuristics for coeffs: assume 1
 
 freealg(sapply(1:5,seq_len),1:5)
 

@@ -112,7 +112,16 @@ freealg(S[[1]],x*S[[2]])
     free_plus_free(S,numeric_to_free(x))
 }
 
-free_power_scalar <- function(S,n){
+`free_power_scalar` <- function(S,n){
+  if(length(n)>1){
+    jj <- table(n)
+    out <- as.freealg(0)
+    for(i in seq_along(jj)){
+      out <- out + as.numeric(jj[i])*Recall(S,as.numeric(names(jj[i])))
+    }
+    return(out)
+  }
+    
   stopifnot(n==round(n))
   if(n<0){
     stop("negative powers not implemented")

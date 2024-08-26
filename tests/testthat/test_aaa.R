@@ -65,6 +65,8 @@ checker1 <- function(x){
     expect_true(x^2 == x*x, info=x)
     expect_true(x^3 == x*x*x, info=x)
     expect_true(x^4 == x*x*x*x, info=x)
+
+    expect_true(x^(0:2) == 1 + x +x^2)
     
     ## check constant() and constant<-():
     ## checks below include 
@@ -87,7 +89,7 @@ checker1 <- function(x){
     expect_true(abelianize(abelianize(x)) == abelianize(x))
 
     expect_true(max(grades(abelianize(x))) <= max(grades(x)))
-    expect_true(grades(x*0)==0)
+    expect_true(grades(x*0) == -Inf)
 
 
   return(TRUE)
@@ -104,6 +106,9 @@ checker2 <- function(x,y){
   expect_true(x*(-y) == -(x*y), info=list(x,y))
 
   ##  expect_true(x*y == y*x)  
+
+  expect_true(deg(x*y) <= deg(x) + deg(y)) # equality if no inverse symbols
+  expect_true(deg(x+y) <= max(deg(x), deg(y)))
 
   return(TRUE)
 }
@@ -144,10 +149,14 @@ checker1(p2)
 checker1(p3)
 checker1(p4)
 
+checker2(p0,p1)
+checker2(p1,-p1)
 checker2(p1,p2)
+checker2(p1,-p2)
 checker2(p2,p3)
 checker2(p3,p4)
 checker2(p4,p1)
+checker2(p4,p0)
 
 checker3(p1,p1,p1)
 checker3(p1,p2,p3)

@@ -37,9 +37,7 @@ List retval(const freealg &X){   // takes a freealg object and returns a mpoly-t
 }
     
 word comb(word w){  // combs through w, performing cancellations; eg [2,3,-3] -> [2] and [2,-5,5,-2,6,7] -> [6,7]
-    word::iterator it;
-    word::const_iterator current,next;
-    it = w.begin();
+    word::iterator it = w.begin();
     while(it != w.end()){
         if(*it == 0){
             it = w.erase(it);  // meat A (erases zero, increments 'it')
@@ -50,9 +48,9 @@ word comb(word w){  // combs through w, performing cancellations; eg [2,3,-3] ->
 
     it = w.begin();        // Step 2, strip out cancelling pairs [n, -n]:
     while(it != w.end()){
-        current = it;
+        word::const_iterator current = it;
         ++it;
-        next = it;
+        word::const_iterator next = it;
         if(it != w.end()){
             if(((*current) + (*next))==0){ 
                 it = w.erase(current); // meat B
@@ -71,11 +69,11 @@ freealg prepare(const List words, const NumericVector coeffs){
     for(int i=0 ; i<n ; i++){  
         if(coeffs[i] != 0){ // only nonzero coeffs
         SEXP jj = words[i]; 
-        Rcpp::IntegerVector words(jj);
+        Rcpp::IntegerVector thisword(jj);
         word w;
-        for(int j=0 ; j<words.size() ; ++j){
+        for(int j=0 ; j<thisword.size() ; ++j){
 
-            w.push_back(words[j]);
+            w.push_back(thisword[j]);
         }
         const word cw = comb(w);
         out[cw] += coeffs[i];  // the meat
@@ -85,7 +83,7 @@ freealg prepare(const List words, const NumericVector coeffs){
     return out;
 }
 
-word concatenate(word w1, const word w2){ 
+word concatenate(word w1, const word& w2){ 
     word::const_iterator it;
     for(it=w2.begin() ; it != w2.end() ; it++){
         w1.push_back(*it);
@@ -93,8 +91,7 @@ word concatenate(word w1, const word w2){
      return comb(w1);
 }
 
-freealg sum(freealg X1, const freealg X2){ //X1 modified in place
-    freealg out;
+freealg sum(freealg X1, const freealg& X2){ //X1 modified in place
     freealg::const_iterator it;
     for(it=X2.begin() ; it != X2.end() ; ++it){
         X1[it->first] += it->second;  // the meat
@@ -102,7 +99,7 @@ freealg sum(freealg X1, const freealg X2){ //X1 modified in place
     return X1;
 }
 
-freealg product(const freealg X1, const freealg X2){
+freealg product(const freealg& X1, const freealg& X2){
     freealg out;
     freealg::const_iterator it1,it2;
     for(it1=X1.begin() ; it1 != X1.end() ; ++it1){
@@ -113,7 +110,7 @@ freealg product(const freealg X1, const freealg X2){
     return out;
 }
 
-freealg power(const freealg X, int n){
+freealg power(const freealg& X, int n){
     freealg out; // empty freealg object is the zero object
     if(n<1){throw std::range_error("power cannot be <1");} 
     if(n==1){
@@ -127,7 +124,7 @@ freealg power(const freealg X, int n){
     return out;
 }
 
-freealg diff1(const freealg X, const int r){  // dX/dx_r
+freealg diff1(const freealg& X, const int r){  // dX/dx_r
     freealg out; // empty freealg object is the zero object
 
     for(freealg::const_iterator it=X.begin() ; it != X.end() ; ++it){
@@ -174,7 +171,7 @@ freealg diffn(freealg X, const NumericVector r){ // (d^len(r) X)/dr[1]...dr[len(
     return X;
 }
 
-freealg multiply_pre_and_post(const freealg Y, const word left, const word right){
+freealg multiply_pre_and_post(const freealg& Y, const word& left, const word& right){
 
     freealg out;
 
@@ -226,13 +223,11 @@ freealg change_r_for_zero(const freealg &X, const int &r){
     return Xout;
 }
 
-freealg subs(const freealg X, const freealg Y, const NumericVector r){
-    freealg out,Xz;
-    freealg::const_iterator iz;
+freealg subs(const freealg& X, const freealg& Y, const NumericVector r){
 
     // We know the words of X have no no zeros, so first we substitute
     // r[0] for 0:
-    Xz = change_r_for_zero(X,r[0]);
+    freealg Xz = change_r_for_zero(X,r[0]);
     
     // Now 'Xz' has zeros; we substitute the zeros for Y
 

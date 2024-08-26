@@ -1,4 +1,6 @@
 `freealg` <- function(words,coeffs){ # formal
+  if(missing(coeffs)){coeffs <- 1}
+  if(length(coeffs) == 1){coeffs <- rep(coeffs,length(words))}
   stopifnot(is_ok_free(words,coeffs))
   out <- lowlevel_simplify(words,coeffs)  # simplify() is defined in
                                  # RcppExports.R; it returns a list
@@ -8,12 +10,12 @@
 }
 
 `words` <- function(x){disord(x[[1]],hashcal(x))}
-`coeffs` <- function(x){disord(x[[2]],hashcal(x))} # accessor methods end here
+`coeffs` <- function(x,drop=TRUE){disord(x[[2]],hashcal(x),drop=drop)} # accessor methods end here
 
 `coeffs<-` <- function(x,value){UseMethod("coeffs<-")}
 `coeffs<-.freealg` <- function(x,value){
   if(is.zero(x)){return(x)}
-  jj <- coeffs(x)
+  jj <- coeffs(x,drop=FALSE)
   if(is.disord(value)){
     stopifnot(consistent(words(x),value))
     jj <- value
@@ -117,6 +119,15 @@
   freealg(replicate(n,sample(distinct,min(1+rgeom(1,1/maxsize),maxsize),replace=TRUE),simplify=FALSE), seq_len(n))
 }
 
+`rfalgg` <- function(n=30, distinct=8, maxsize=7, include.negative=FALSE){
+    rfalg(n=n, distinct=distinct, maxsize=maxsize, include.negative=FALSE)
+}
+
+`rfalggg` <- function(n=100, distinct=26, maxsize=30, include.negative=FALSE){
+    rfalg(n=n, distinct=distinct, maxsize=maxsize, include.negative=FALSE)
+}
+
+
 `print.freealg` <- function(x,...){
   cat("free algebra element algebraically equal to\n")
   SHRT_MAX <- 32767
@@ -140,9 +151,11 @@
     } else {
       pm <- " - "
     }
-    co <- capture.output(cat(abs(co)))
     jj <- w[i][[1]]
-    if(length(jj)>0){mulsym <- "*"} else {mulsym <- ""}
+    co <- capture.output(cat(abs(co)))
+    if(length(jj)>0){mulsym <- getOption("mulsym")} else {mulsym <- ""}
+    if((co=="1") && (is.null(mulsym) || nchar(mulsym)==0) && (length(jj)>0)){co <- ""}
+
     if(any(jj<0)){jj[jj<0] <- n-jj[jj<0]}
     ss <- symbols[jj]
     wanted <- jj>SHRT_MAX
@@ -160,8 +173,9 @@
   }
   if(is.zero(x)){out <- "0"}
   cat(paste(strwrap(out, getOption("width")), collapse="\n"))
+  
   cat("\n")
-  return(x)
+  return(invisible(x))
 }
 
 `vector_to_free` <- function(v,coeffs){
@@ -225,7 +239,7 @@ setGeneric("deriv")
 `subsu` <- function(S1,S2,r){
     S1 <- as.freealg(S1)
     S2 <- as.freealg(S2)
-    if(is.character(r) & (nchar(r)==1)){r <- which(letters==r)}
+    if(is.character(r) && (nchar(r)==1)){r <- which(letters==r)}
     out <- lowlevel_subs(S1[[1]],S1[[2]],S2[[1]],S2[[2]],as.integer(round(r[1])))
     freealg(out[[1]],out[[2]])
 }
@@ -262,7 +276,7 @@ setGeneric("deriv")
 
 `grades` <- function(x){
   if(is.zero(x)){
-    out <- 0
+    out <- -Inf
   } else {
     out <- disord(unlist(lapply(elements(words(x)),length)),hashcal(x))
   }
@@ -280,6 +294,8 @@ setGeneric("deriv")
     }
 }
 
+`deg` <- function(x){max(grades(x))}
+
 `nterms` <- function(x){length(coeffs(x))}
 
 `inv` <- function(S){
@@ -295,6 +311,7 @@ setGeneric("deriv")
 }
 
 setGeneric("drop")
+setOldClass("freealg")
 setMethod("drop","freealg", function(x){
     if(is.zero(x)){
         return(0)
@@ -305,4 +322,24 @@ setMethod("drop","freealg", function(x){
     }
 })
 
+setGeneric("sort")
+setGeneric("unlist")
+setGeneric("lapply")
 
+`all_pos` <- function(x){all(unlist(words(x))>0)}
+
+`keep_pos` <- function(x){
+  coeffs(x)[unlist(lapply(words(x),function(x){any(x<0)}))] <- 0
+  return(x)
+}
+
+`[.freealg` <- function(x,...){
+    wanted <- list(...)[[1]]
+    coeffs(x)[!wanted] <- 0
+    return(x)
+}
+         
+`[<-.freealg` <- function(x,index,value){
+    coeffs(x)[index] <- value
+    return(x)
+}

@@ -1,7 +1,7 @@
 Package: freealg
 Type: Package
 Title: The Free Algebra
-Version: 1.1-1
+Version: 1.1-8
 Authors@R: person(given=c("Robin", "K. S."), family="Hankin", role = c("aut","cre"), email="hankin.robin@gmail.com", comment = c(ORCID = "0000-0001-5982-0415"))
 Maintainer: Robin K. S. Hankin <hankin.robin@gmail.com>
 Depends: R (>= 3.5.0), methods
@@ -12,16 +12,15 @@ Description: The free algebra in R with non-commuting indeterminates.
      <doi:10.48550/ARXIV.2211.04002>.
 License: GPL (>= 2)
 LazyData: yes
-Imports: Rcpp (>= 1.0-7), partitions (>= 1.9-22), mathjaxr, disordR (>=
-        0.9)
+Imports: Rcpp (>= 1.0-7), partitions (>= 1.9-22), disordR (>= 0.9-5-1)
 LinkingTo: Rcpp
-Suggests: knitr,testthat,magrittr,markdown,rmarkdown
+Suggests: knitr,testthat,magrittr,markdown,rmarkdown,covr
 VignetteBuilder: knitr
-URL: https://github.com/RobinHankin/freealg
+URL: https://github.com/RobinHankin/freealg,
+        https://robinhankin.github.io/freealg/
 BugReports: https://github.com/RobinHankin/freealg/issues
-RdMacros: mathjaxr
 NeedsCompilation: yes
-Packaged: 2023-03-20 19:06:43 UTC; rhankin
+Packaged: 2024-08-26 20:39:27 UTC; rhankin
 Author: Robin K. S. Hankin [aut, cre] (<https://orcid.org/0000-0001-5982-0415>)
 Repository: CRAN
-Date/Publication: 2023-03-20 19:50:02 UTC
+Date/Publication: 2024-08-26 23:30:02 UTC

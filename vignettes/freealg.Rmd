@@ -2,7 +2,7 @@
 title: "The free algebra with R"
 author: "Robin K. S. Hankin"
 output: html_vignette
-bibliography: free.bib
+bibliography: freealg.bib
 vignette: >
   %\VignetteIndexEntry{The free algebra}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,20 +17,19 @@ library("freealg")
 set.seed(1)
 ```
 
-<p style="text-align: right;">
-![](`r system.file("help/figures/freealg.png", package = "freealg")`){width=10%}
-</p>
+```{r out.width='20%', out.extra='style="float:right; padding:10px"',echo=FALSE}
+knitr::include_graphics(system.file("help/figures/freealg.png", package = "freealg"))
+```
 
 To cite the `freealg` package in publications, please use
-@hankin2022_freealg.
-
-The _free algebra_ is best defined by an example: with an alphabet of
-$\{x,y,z\}$, and real numbers $\alpha,\beta,\gamma$ we formally define
-$A=\alpha x^2yx + \beta zy$ and $B=-\beta zy + \gamma y^4$.  Addition
-is commutative so $x+y=y+x$ (and so $A=\beta zy + \alpha x^2yx$) but
-multiplication is not commutative, so $xy\neq yx$; both are
-associative.  We also have consistency in that $\alpha(\beta
-P)=(\alpha\beta)P$ for any expression $P$.  Then:
+@hankin2022_freealg.  In this short document I show how free algebras
+may be studied using the `freealg` package.  The _free algebra_ is
+best introduced by an example: with an alphabet of $\{x,y,z\}$, and
+real numbers $\alpha,\beta,\gamma$ we formally define $A=\alpha x^2yx
++ \beta zy$ and $B=-\beta zy + \gamma y^4$.  Addition is commutative
+so $A+B=B+A$.  However, multiplication is not commutative so $AB\neq
+BA$ in general; both are associative.  We also have consistency in
+that $\alpha(\beta P)=(\alpha\beta)P$ for any expression $P$.  Then:
 
 \[
 A+B=(\alpha x^2yx + \beta zy) + (-\beta zy + \gamma y^4) = \alpha x^2yx + \gamma y^4
@@ -136,6 +135,18 @@ subs("aabccc",b="1+3x")  # aa(1+3x)ccc
 
 ```{r,sequentialsubstitution}
 subs("abccc",b="1+3x",x="1+d+2e")
+```
+
+## Experimental functionality
+
+It is possible to extract components of `freealg` objects using
+reasonably standard idiom:
+
+```{r showaccessor}
+(a <- as.freealg("aaa + 2*aaba + 3*abbbba + 9*xyzabc - 3*abc"))
+a[coeffs(a) > 2]
+a[coeffs(a) < 0] <- 99
+a
 ```
 
 There is even some experimental functionality for calculus:

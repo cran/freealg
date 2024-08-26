@@ -21,12 +21,13 @@
 \alias{[,dot,missing,ANY,ANY-method}
 \alias{[,dot,missing,missing,ANY-method}
 \title{Class \dQuote{dot}}
-\description{\loadmathjax
+\description{
 
-The dot object is defined so that idiom like \code{.[x,y]} returns the
-commutator, that is, \code{xy-yx} or the Lie bracket \mjseqn{[x,y]}.  It
-would have been nice to use \code{[x,y]} (that is, without the dot) but
-although this is syntactically consistent, it cannot be done in R.
+The dot object is defined so that \code{.[x,y]} returns the commutator
+of \code{x} and \code{y}, that is, \code{xy-yx} or the Lie bracket
+\eqn{[x,y]}.  It would have been nice to use \code{[x,y]} (that is,
+without the dot) but although this is syntactically consistent, it
+cannot be done in R.
 
 The \dQuote{meat} of the dot functionality is:
 
@@ -44,7 +45,7 @@ matrix product.
 
 The Jacobi identity, satisfied by any associative algebra, is
 
-\mjdeqn{
+\deqn{
   \left[x,\left[y,z\right]\right]+
   \left[y,\left[z,x\right]\right]+
   \left[z,\left[x,y\right]\right]=0
@@ -110,5 +111,7 @@ O <- rM()
 
 .[M,N]
 jacobi(M,N,O)
+
+plot(.[sin,tan](seq(from=0,to=1,len=100)))
 
 }

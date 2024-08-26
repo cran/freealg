@@ -1,0 +1,67 @@
+---
+title: "Single letter symbols"
+output: bookdown::html_document2
+bibliography: freealg.bib
+---
+
+```{r setup,include=FALSE}
+set.seed(0)
+knitr::opts_chunk$set(echo = TRUE)
+library("freealg")
+```
+
+```{r out.width='20%', out.extra='style="float:right; padding:10px"',echo=FALSE}
+knitr::include_graphics(system.file("help/figures/freealg.png", package = "freealg"))
+```
+
+To cite the `freealg` package in publications please use
+@hankin2022_freealg.  This short markdown document defines variables
+`a`, `b`, $\ldots$, `z` and their inverses `A`-`Z`, which are
+single-symbol `freealg` objects.  At the end, it creates a file called
+`lettersymbols.rda` which loads these symbols in to an R session.
+This file resides in the `inst/' directory of the package.
+
+Earlier versions of the `freealg` package included a copy of
+`lettersymbols.rda` in the `data/` directory; lazy loading meant that
+all these letters adopted their `freealg` interpretation on loading
+the package, which is why this functionality was experimental.  On
+reflection, however, it was not desirable and the file is not included
+in the package any more.  Setting `LazyData` to `TRUE` in the
+`DESCRIPTION` file is not desirable either, because the dot object
+requires lazy loading to work correctly.
+
+The following code creates upper and lower case single-letter symbols
+in an R session:
+
+```{r, label=createlettersymbols}
+for(letter in c(letters,LETTERS)){
+  eval(parse(text=paste(letter, ' <- as.freealg("',letter, '")')))
+}
+```
+
+Lowercase letters `c`, `q`, and `t`, and uppercase letters
+`C`, `D`, `F`, `I`, `T`, present particular problems as they have
+distinct meanings in `R`.  
+
+With these variables we can do all sorts of slick calculations
+immediately after loading the package:
+
+```{r, label=slickexample}
+(1+a)*(1-a) == 1-a^2
+.[a,.[b,c]] + .[c,.[a,b]] + .[b,.[c,a]] # Jacobi identity
+horner(2*a+3*b, 1:4)
+```
+
+### Package dataset {-}
+
+Following lines create `lettersymbols.rda`, formerly residing in the
+`data/` directory of the package.
+
+```{r,label=savepackagedataset}
+save(
+a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,
+A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,
+file="lettersymbols.rda")
+```
+
+### References {-}
